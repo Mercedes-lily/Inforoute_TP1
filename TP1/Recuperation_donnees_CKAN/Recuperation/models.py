@@ -5,7 +5,8 @@ from django.db import models
 
 class Etablissement(models.Model):
     id = models.AutoField(primary_key=True)
-    code = models.IntegerField()
+    codeOrg = models.IntegerField()
+    codeImm = models.IntegerField()
     nom = models.CharField(max_length = 100)
     coordonnee = models.ForeignKey("Coordonnee", on_delete=models.CASCADE)
     prescolaire = models.BooleanField()
@@ -14,7 +15,7 @@ class Etablissement(models.Model):
     professionel = models.BooleanField()
     adulte  = models.BooleanField()
     type = models.CharField(max_length = 50)
-    ide = models.OneToOneField("IDE", on_delete=models.CASCADE)
+    ide = models.ForeignKey("IDE", on_delete=models.SET_NULL, null = True, blank=True)
     regroupement = models.ForeignKey("Regroupement", on_delete=models.CASCADE)
 
 
@@ -28,16 +29,6 @@ class Regroupement(models.Model):
     superficie = models.IntegerField()
     perimetre = models.IntegerField()
     langue = models.CharField(max_length=3)
-
-class Municipalite(models.Model):
-    id = models.AutoField(primary_key=True)
-    Code = models.IntegerField()
-    Nom = models.CharField(max_length=100)
-    Statut = models.CharField(max_length=1)
-    Region_administrative = models.CharField(max_length=50)
-
-
-
 
 #Terminee
 
@@ -60,8 +51,8 @@ class IDE(models.Model) :
 class Coordonnee(models.Model):
     id = models.AutoField(primary_key=True)
     adresse = models.CharField(max_length = 100)
-    municipalite = models.ForeignKey("Municipalite", on_delete=models.CASCADE)
+    municipalite = models.CharField(max_length = 20)
     code_postal = models.CharField(max_length = 7)
-    site = models.CharField(max_length = 100)
-    telephone = models.CharField(max_length=12)
+    site = models.URLField(null=True, blank=True)
+    telephone = models.CharField(max_length=12, null=True, blank=True)
     
