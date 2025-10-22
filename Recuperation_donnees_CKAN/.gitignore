@@ -1,0 +1,32 @@
+__pycache__/
+*.py[cod]
+*.pyc
+*$py.class
+# Cython
+*.so
+venv/
+env/
+.env
+.venv
+.Python
+build/
+develop-eggs/
+dist/
+eggs/
+*.egg-info
+*.egg
+Installer logs
+pip-log.txt
+pip-delete-this-file.txt
+pip.log
+.pytest_cache/
+.coverage
+htmlcov/
+spec/
+build/
+dist/
+.ipynb_checkpoints
+.vscode/        # VS Code
+.idea/          # PyCharm/IntelliJ
+*.swp           # Vim swap files
+*~              # Temporary files
