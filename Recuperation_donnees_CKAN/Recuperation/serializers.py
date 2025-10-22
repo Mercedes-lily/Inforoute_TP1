@@ -34,7 +34,7 @@ class EtablissementSerializer(serializers.ModelSerializer):
 	ide = IDESerializer(read_only=True)
 	regroupement = RegroupementSerializer(read_only=True)
 	class Meta:
-		model = Regroupement
+		model = Etablissement
 		fields = ("codeOrg", "CodeImm", "nom", "coordonnee", "prescolaire", "primaire", "secondaire", "professionnel", "adulte", "type", "ide", "regroupement")
 
 
