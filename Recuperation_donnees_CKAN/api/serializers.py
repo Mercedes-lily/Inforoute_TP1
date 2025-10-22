@@ -9,7 +9,7 @@ class CoordonneeSerializer(serializers.ModelSerializer):
 		fields =("adresse", "municipalite", "code_postal", "site", "telephone")
 
 class RegroupementSerializer(serializers.ModelSerializer):
-	coordonnee = CoordonneeSerializer(read_only=True) #lors de l<ajouy de regroupement, on ne peut ajouter de coordonnee
+	coordonnee = CoordonneeSerializer() #lors de l<ajouy de regroupement, on ne peut ajouter de coordonnee
 	class Meta:
 		model = Regroupement
 		fields = ("code", "nom", "nom_court", "coordonnee", "superficie", "perimetre", "langue")
@@ -25,16 +25,16 @@ class IMSESerializer(serializers.ModelSerializer):
 		fields = ("indice", "rang")
 
 class IDESerializer(serializers.ModelSerializer):
-	imse = IMSESerializer(read_only=True)
-	sfr = SFRSerializer(read_only=True)
+	imse = IMSESerializer()
+	sfr = SFRSerializer()
 	class Meta:
 		model = IDE
 		fields = ("sfr", "imse", "defavorisation")
 
 class EtablissementSerializer(serializers.ModelSerializer):
-	coordonnee = CoordonneeSerializer(read_only=True)
-	ide = IDESerializer(read_only=True)
-	regroupement = RegroupementSerializer(read_only=True)
+	coordonnee = CoordonneeSerializer()
+	ide = IDESerializer()
+	regroupement = RegroupementSerializer()
 	class Meta:
 		model = Etablissement
-		fields = ("codeOrg", "codeImm", "nom", "coordonnee", "prescolaire", "primaire", "secondaire", "professionnel", "adulte", "type", "ide", "regroupement")
+		fields = ("id", "codeOrg", "codeImm", "nom", "coordonnee", "prescolaire", "primaire", "secondaire", "professionnel", "adulte", "type", "ide", "regroupement")
