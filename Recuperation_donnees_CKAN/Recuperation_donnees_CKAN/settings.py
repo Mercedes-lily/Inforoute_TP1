@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'Recuperation',
     'drf_yasg',
     'rest_framework',
-    'graphene_django'
+    'graphene_django',
+    'api'
 ]
 
 MIDDLEWARE = [
