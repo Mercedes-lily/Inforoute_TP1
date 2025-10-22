@@ -80,7 +80,7 @@ def importData():
 			)
 			sfrObject.save()
 
-			defavorise = imseObject.rang >= 8
+			defavorise = imseObject.rang >= 8 or sfrObject.rang >= 8
 
 			ide = models.IDE(
 				sfr = sfrObject,
