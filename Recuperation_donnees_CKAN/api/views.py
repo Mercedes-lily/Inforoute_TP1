@@ -16,5 +16,11 @@ class EtablissementAPIView(APIView):
         else:
            return Response(etablissements_serializer.errors, status = status.HTTP_400_BAD_REQUEST)
          
-    def delete(self, request):
-        return Response({"message" : "Liste de regroupement"}, status = status.HTTP_200_OK)
+    def delete(self, request, etablissement_id):
+        try:
+            etablissement = Etablissement.objects.get(id=etablissement_id)
+        except: 
+            return Response({"error" : "Établissement non trouvé"}, status = status.HTTP_404_NOT_FOUND)
+
+        etablissement.delete()
+        return Response({"message" : "Établissement supprimée"}, status = status.HTTP_204_NO_CONTENT)
