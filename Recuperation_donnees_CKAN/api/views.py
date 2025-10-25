@@ -14,9 +14,19 @@ class EtablissementAPIView(APIView):
         etablissements_serializer = EtablissementSerializer(etablissements, many=True)
         return Response(etablissements_serializer.data, status = status.HTTP_200_OK)
     
-    @swagger_auto_schema(tags=['Etablissements'],
-    operation_description="Ajouter une école",
-    responses= {201 : "Établissement créé", 400:"Bad Request"})
+    # @swagger_auto_schema(tags=['Etablissements'],
+    # operation_description="Ajouter une école",
+    # responses= {201 : "Établissement créé", 400:"Bad Request"})
+
+    @swagger_auto_schema(
+        tags=['Etablissements'],
+        operation_description="Ajouter une école",
+        request_body=EtablissementSerializer, 
+        responses= {
+            201 : EtablissementSerializer, # Affichera l'objet créé en cas de succès
+            400 : "Bad Request"
+        }
+    )
     def post(self, request):
         etablissements_serializer = EtablissementSerializer(data=request.data)
         if etablissements_serializer.is_valid():
