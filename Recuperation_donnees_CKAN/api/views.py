@@ -24,22 +24,25 @@ class EtablissementAPIView(APIView):
             return Response({"message" : "Valide"}, status = status.HTTP_201_CREATED)
         else:
            return Response(etablissements_serializer.errors, status = status.HTTP_400_BAD_REQUEST)
-    
-    # @swagger_auto_schema(
-    #     tags=['Etablissements'],
-    #     operation_description="Supprimé une école par son ID",
-    #     request_body=openapi.Schema(
-    #         type=openapi.TYPE_OBJECT,
-    #         properties={
-    #             "id": openapi.Schema(
-    #                 type=openapi.TYPE_INTEGER,
-    #                 description="ID de l'école à supprimer",
-    #             )
-    #         },
-    #         required=["id"], 
-    #     ),
-    #     responses= {204 : "Établissement supprimé", 404:"Not Found"}
-    # )
+
+
+
+class EtablissementDeleteAPIView(APIView):    
+    @swagger_auto_schema(
+        tags=['Etablissements'],
+        operation_description="Supprimé une école par son ID",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "id": openapi.Schema(
+                    type=openapi.TYPE_INTEGER,
+                    description="ID de l'école à supprimer",
+                )
+            },
+            required=["id"], 
+        ),
+        responses= {204 : "Établissement supprimé", 404:"Not Found"}
+    )
 
     def delete(self, request, etablissement_id):
         try:
