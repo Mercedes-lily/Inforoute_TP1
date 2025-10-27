@@ -1,19 +1,16 @@
 from django.db import models
 
-# Create your models here.
-from django.db import models
-
 class Etablissement(models.Model):
     id = models.AutoField(primary_key=True)
     codeOrg = models.IntegerField()
     codeImm = models.IntegerField()
     nom = models.CharField(max_length = 100)
     coordonnee = models.ForeignKey("Coordonnee", on_delete=models.CASCADE)
-    prescolaire = models.BooleanField()
-    primaire = models.BooleanField()
-    secondaire = models.BooleanField()
-    professionnel = models.BooleanField()
-    adulte  = models.BooleanField()
+    prescolaire = models.BooleanField(default=False)
+    primaire = models.BooleanField(default=False)
+    secondaire = models.BooleanField(default=False)
+    professionnel = models.BooleanField(default=False)
+    adulte  = models.BooleanField(default=False)
     type = models.CharField(max_length = 50)
     ide = models.ForeignKey("IDE", on_delete=models.SET_NULL, null = True, blank=True)
     regroupement = models.ForeignKey("Regroupement", on_delete=models.CASCADE)
@@ -53,6 +50,5 @@ class Coordonnee(models.Model):
     adresse = models.CharField(max_length = 100)
     municipalite = models.CharField(max_length = 20)
     code_postal = models.CharField(max_length = 7)
-    site = models.URLField(null=True, blank=True)
+    site = models.CharField(max_length=100, null=True, blank=True)
     telephone = models.CharField(max_length=12, null=True, blank=True)
-    
