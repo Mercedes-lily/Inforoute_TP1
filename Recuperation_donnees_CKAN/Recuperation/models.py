@@ -12,7 +12,7 @@ class Etablissement(models.Model):
     prescolaire = models.BooleanField()
     primaire = models.BooleanField()
     secondaire = models.BooleanField()
-    professionel = models.BooleanField()
+    professionnel = models.BooleanField()
     adulte  = models.BooleanField()
     type = models.CharField(max_length = 50)
     ide = models.ForeignKey("IDE", on_delete=models.SET_NULL, null = True, blank=True)
