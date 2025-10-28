@@ -154,14 +154,22 @@ class CreateIDE(graphene.Mutation):
 	class Arguments:
 		sfr = graphene.Argument(graphene.ID, required=True)
 		imse = graphene.Argument(graphene.ID, required=True)
-		defavorisation = graphene.Boolean(required=True)
 
 	ide = graphene.Field(IDEType)
 
 	def mutate(root, info, sfr, imse, defavorisation):
+		#Rechercher les objets liés (sfr, imse)
+		try:
+			sfr_obj = SFR.objects.get(pk=sfr)
+			imse_obj = IMSE.objects.get(pk=imse)
+		except Exception as e:
+			raise Exception("Erreur lors de la récupération de: " + str(e))
+		defavorisation = False
+		if (sfr_obj.rang >= 8 or imse_obj.rang >= 8):
+			defavorisation = True
 		ide = IDE(
-			sfr=sfr,
-			imse=imse,
+			sfr=sfr_obj,
+			imse=imse_obj,
 			defavorisation=defavorisation
 		)
 		ide.save()
@@ -252,11 +260,17 @@ class CreateRegroupement(graphene.Mutation):
 	regroupement = graphene.Field(RegroupementType)
 
 	def mutate(root, info, code, nom, nom_court, coordonnee, superficie, perimetre, langue):
+		#Rechercher les objets liés (coordonnee)
+		try:
+			coordonnee_obj = Coordonnee.objects.get(pk=coordonnee)
+		except Exception as e:
+			raise Exception("Erreur lors de la récupération des coordonnées: " + str(e))
+
 		regroupement = Regroupement(
 			code=code,
 			nom=nom,
 			nom_court=nom_court,
-			coordonnee=coordonnee,
+			coordonnee=coordonnee_obj,
 			superficie=superficie,
 			perimetre=perimetre,
 			langue=langue
@@ -297,19 +311,35 @@ class CreateEtablissement(graphene.Mutation):
 
 	def mutate(root, info, codeOrg, codeImm, nom, coordonnee, type, prescolaire, primaire, 
 			secondaire, professionnel, adulte, ide, regroupement):
+		
+		#Valider qu'un type est true
+		if not (prescolaire or primaire or secondaire or professionnel or adulte):
+			raise Exception("Veuillez sélectionner au moins un niveau d'éducation.")
+
+		#Rechercher les objets liés (coordonnee, ide, regroupement)
+		try:
+			coordonnee_obj = Coordonnee.objects.get(pk=coordonnee)
+			if ide:
+				ide_obj = IDE.objects.get(pk=ide)
+			else:
+				ide_obj = None
+			regroupement_obj = Regroupement.objects.get(pk=regroupement)
+		except Exception as e:
+			raise Exception("Erreur lors de la récupération de: " + str(e))
+		
 		etablissement = Etablissement(
 			codeOrg=codeOrg,
 			codeImm=codeImm,
 			nom=nom,
-			coordonnee=coordonnee,
+			coordonnee=coordonnee_obj,
 			type=type,
 			prescolaire=prescolaire,
 			primaire=primaire,
 			secondaire=secondaire,
 			professionnel=professionnel,
 			adulte=adulte,
-			ide=ide,
-			regroupement=regroupement
+			ide=ide_obj,
+			regroupement=regroupement_obj
 		)
 		etablissement.save()
 		return CreateEtablissement(etablissement=etablissement)
