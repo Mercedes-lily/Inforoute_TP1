@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Statistiques CKAN{% endblock %}
+
+{% block content %}
+	<h1>Statistiques CKAN</h1>
+	<h2>Liste des sources</h2>
+	{% for url in stats.urls %}
+		<p>{{ url }}</p>
+	{% endfor %}
+	<h2>Statistiques sur la base de données:</h2>
+	<ul>
+		<li>Nombre de jeux de données : {{ stats.get_total_datasets }}</li>
+		<li>Nombre d'écoles : {{ stats.get_total_ecoles }}</li>
+		<li>Nombre de centres de services scolaires : {{ stats.get_total_regroupements }}</li>
+		<li>Nombre d'Indice de défavorisation : {{ stats.get_total_IDEs }}</li>
+		<li>Nombre d'écoles défavorisées : {{ stats.get_total_defavorisees }}</li>
+
+		<ul>Nombre d'écoles par centre de services scolaires :
+			{% for reg, count in stats.get_ecole_par_regroupement.items %}
+				<li>{{ reg }}: {{ count }}</li>
+			{% endfor %}
+		</ul>
+	</ul>
+{% endblock %}
+

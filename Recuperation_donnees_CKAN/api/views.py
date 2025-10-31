@@ -3,9 +3,11 @@ from Recuperation.models import Etablissement
 from .serializers import EtablissementSerializer
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from rest_framework.permissions import IsAuthenticated
 
 
 class EtablissementAPIView(APIView):
+    permission_classes = [ IsAuthenticated ]
     @swagger_auto_schema(tags=['Etablissements'],
     operation_description="Récupérer toutes les écoles",
     responses= {200 : EtablissementSerializer(many=True)})
@@ -34,6 +36,8 @@ class EtablissementAPIView(APIView):
 
 
 class EtablissementDeleteAPIView(APIView):    
+    permission_classes = [ IsAuthenticated ]
+
     @swagger_auto_schema(
         tags=['Etablissements'],
         operation_description="Supprimé une école par son ID",

@@ -38,14 +38,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-	
+    
     'drf_yasg',
     'rest_framework',
+    'rest_framework.authtoken',
     'graphene_django',
-	
+    'graphql_jwt', #django-graphql-jwt pour l'authentification par token JWT
+    
     'Recuperation',
     'api',
-	'gql',
+    'gql',
 ]
 
 MIDDLEWARE = [
@@ -109,6 +111,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'graphql_jwt.backends.JSONWebTokenBackend', #GraphQL JWT authentication par token
+    'django.contrib.auth.backends.ModelBackend', #Admin site
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
@@ -136,4 +142,10 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 GRAPHENE= {
 	'SCHEMA' : 'gql.schema.schema',
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
 }

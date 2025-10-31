@@ -16,9 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework.authtoken import views
+from Recuperation.views import homeView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include("api.urls")),
-	path('gql/', include("gql.urls")),
+	path('', homeView, name='home'),
+    path('api/', include("api.urls", namespace="api")),
+	path('gql/', include("gql.urls", namespace="gql")),
+	path('Recuperation/', include("Recuperation.urls", namespace="Recuperation")),
+	path('api/token/', views.obtain_auth_token),
 ]

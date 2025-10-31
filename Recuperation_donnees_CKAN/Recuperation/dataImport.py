@@ -2,10 +2,24 @@ import requests
 import json
 from Recuperation import models
 
+"""
+Liste des queries pour récupérer les données CKAN et les insérer dans la base de données
+Dans l'ordre:
+- Liste des commissions scolaires francophones de Québec
+- Indice de défavorisation des écoles primaires
+- Indice de défavorisation des écoles secondaires
+- Liste des écoles publiques
+"""
+urls = [
+	'https://www.donneesquebec.ca/recherche/api/3/action/datastore_search?resource_id=7dd945bf-c9f4-4dd6-852c-bf3b8d3e0120&limit=10000&filters={"NOM_MUNCP_GDUNO":"Québec"}',
+	'https://www.donneesquebec.ca/recherche/api/3/action/datastore_search?resource_id=6c5d4a5d-ba3b-40a6-b570-916f43ab622c&limit=10000&filters={"Diffusion":"OUI"}',
+	'https://www.donneesquebec.ca/recherche/api/3/action/datastore_search?resource_id=3e9aa43a-c32b-4779-b258-8407db716813&limit=10000&filters={"Diffusion":"OUI"}',
+	'https://www.donneesquebec.ca/recherche/api/3/action/datastore_search?resource_id=c6640a54-bc4b-43ec-864e-6c325dce61bc&limit=10000&filters={"NOM_MUNCP":"Québec"}'
+]
 
 def importData():
 #Jeu de données: Liste des commissions scolaires francophones de Québec
-	url='https://www.donneesquebec.ca/recherche/api/3/action/datastore_search?resource_id=7dd945bf-c9f4-4dd6-852c-bf3b8d3e0120&limit=10000&filters={"NOM_MUNCP_GDUNO":"Québec"}'
+	url=urls[0]
 	response=requests.get(url)
 	api_data=response.json()
 	records=api_data['result']['records']
@@ -22,7 +36,7 @@ def importData():
 			site = data.get('NOM_SITE_WEB_GDUNO', ''),
 			telephone = data.get('NO_TEL', ''))
 		coor.save()
-		cs = models.Regroupement(
+		reg = models.Regroupement(
 			code = int(data.get('CD_CS_FRA')),
 			nom = data.get('NOM_LONG',''),
 			nom_court = data.get('NOM_OFFCL_CS_FRA',''),
@@ -30,19 +44,19 @@ def importData():
 			perimetre = int(data.get('VALR_PERMT_KM',0)),
 			langue = 'Fr',
 			coordonnee = coor)
-		cs.save()
+		reg.save()
 		if data.get('CD_CS_FRA') not in listeCode:
 			listeCode.append(data.get('CD_CS_FRA'))
 
 	#Jeu de données : Indice de défavorisation des écoles primaires
-	url = 'https://www.donneesquebec.ca/recherche/api/3/action/datastore_search?resource_id=6c5d4a5d-ba3b-40a6-b570-916f43ab622c&limit=10000'
+	url = urls[1]
 	response=requests.get(url)
 	api_data=response.json()
 	records=api_data['result']['records']
 	dictIDE = {}
 	for data in records:
 		#data = dictionnaire
-		if data.get('Code_Cs') in listeCode and data.get('Diffusion') == 'OUI':
+		if data.get('Code_Cs') in listeCode:
 			imseObject = models.IMSE(
 				indice=float(data.get('IMSE', 0)),
 				rang = int(data.get('Rang_Decile_IMSE',0))
@@ -62,13 +76,13 @@ def importData():
 			dictIDE[data.get('Code_Org')] = ide
 
 	#Jeu de données : Indice de défavorisation des écoles secondaires
-	url = 'https://www.donneesquebec.ca/recherche/api/3/action/datastore_search?resource_id=3e9aa43a-c32b-4779-b258-8407db716813&limit=10000'
+	url = urls[2]
 	response=requests.get(url)
 	api_data=response.json()
 	records=api_data['result']['records']
 	for data in records:
 		#data = dictionnaire
-		if data.get('Code_Cs') in listeCode and data.get('Diffusion') == 'OUI':
+		if data.get('Code_Cs') in listeCode:
 			imseObject = models.IMSE(
 				indice=float(data.get('IMSE', 0)),
 				rang = int(data.get('Rang_Decile_IMSE',0))
@@ -91,7 +105,7 @@ def importData():
 			dictIDE[data.get('Code_Org')] = ide
 
 	#Jeu de données : Liste des écoles publiques
-	url='https://www.donneesquebec.ca/recherche/api/3/action/datastore_search?resource_id=c6640a54-bc4b-43ec-864e-6c325dce61bc&limit=10000&filters={"NOM_MUNCP":"Québec"}'
+	url = urls[3]
 	response=requests.get(url)
 	api_data=response.json()
 	records=api_data['result']['records']
@@ -144,4 +158,39 @@ def cleanDb():
 	etabs = models.Etablissement.objects.all()
 	etabs.delete()
 
+class Stats: #FAIRE DES METHODES POUR RAFRAICHIR LES STATS
+	def __init__(self):
+		self.urls = urls
 
+	#Retourne le nombre de datasets importés.
+	def get_total_datasets(self):
+		return len(self.urls)
+	
+	#Retourne le nombre total d'établissements (Etablissement).
+	def get_total_ecoles(self):
+		return models.Etablissement.objects.count()
+	
+	#Retourne le nombre total de commissions scolaires (Regroupement).
+	def get_total_regroupements(self):
+		return models.Regroupement.objects.count()
+	
+	#Retourne le nombre total d'IDE (IDE compossé de IMSE et SFR).
+	def get_total_IDEs(self):
+		return models.IDE.objects.count()
+
+	#Retourne le nombre d'écoles défavorisées (IDE.defavorisation == True).
+	def get_total_ecoles_defavorisees(self):
+		return models.Etablissement.objects.filter(ide__defavorisation=True).count()
+	
+	#Retourne la liste des commissions scolaires (Regroupement) avec le nombre d'écoles (Etablissement) associées.
+	def get_ecole_par_regroupement(self):
+		result = {}
+		regroupements = models.Regroupement.objects.all()
+		for reg in regroupements:
+			nombre_ecoles = models.Etablissement.objects.filter(regroupement=reg).count()
+			result[reg.nom] = nombre_ecoles
+		return result
+	
+	#Retourne la liste des urls utilisées pour l'importation des données.
+	def get_urls(self):
+		return self.urls
