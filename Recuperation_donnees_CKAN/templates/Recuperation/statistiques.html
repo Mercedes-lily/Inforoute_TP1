@@ -3,24 +3,85 @@
 {% block title %}Statistiques CKAN{% endblock %}
 
 {% block content %}
-	<h1>Statistiques CKAN</h1>
-	<h2>Liste des sources</h2>
-	{% for url in stats.urls %}
-		<p>{{ url }}</p>
-	{% endfor %}
-	<h2>Statistiques sur la base de données:</h2>
-	<ul>
-		<li>Nombre de jeux de données : {{ stats.get_total_datasets }}</li>
-		<li>Nombre d'écoles : {{ stats.get_total_ecoles }}</li>
-		<li>Nombre de centres de services scolaires : {{ stats.get_total_regroupements }}</li>
-		<li>Nombre d'Indice de défavorisation : {{ stats.get_total_IDEs }}</li>
-		<li>Nombre d'écoles défavorisées : {{ stats.get_total_defavorisees }}</li>
-
-		<ul>Nombre d'écoles par centre de services scolaires :
-			{% for reg, count in stats.get_ecole_par_regroupement.items %}
-				<li>{{ reg }}: {{ count }}</li>
-			{% endfor %}
-		</ul>
-	</ul>
+	<div class="mb-4">
+		<h1>Statistiques CKAN</h1>
+		<h2>Liste des sources</h2>
+		{% for url in stats.urls %}
+			<div class="row row-cols-1 row-cols-md-1 g-4">
+				<div class="col">
+					<div class="card text-white bg-success mb-3">
+						<div class="card-body">
+							<h5 class="card-title">Source {{ forloop.counter }}:</h5>
+							<p class="card-text">{{ url }}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+	<hr>
+	<div class="mb-4">
+		<h2>Statistiques sur la base de données:</h2>
+		<div class ="row row-cols-1 row-cols-md-3 g-4">
+			<div class="col">
+				<div class="card text-white bg-primary mb-3">
+					<div class="card-body">
+						<h5 class="card-title">Jeux de données</h5>
+						<p class="card-text">{{ stats.get_total_datasets }}</p>
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				<div class="card text-white bg-success mb-3">
+					<div class="card-body">
+						<h5 class="card-title">Écoles</h5>
+						<p class="card-text">{{ stats.get_total_ecoles }}</p>
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				<div class="card text-white bg-danger mb-3">
+					<div class="card-body">
+						<h5 class="card-title">Centres de services scolaires</h5>
+						<p class="card-text">{{ stats.get_total_regroupements }}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row row-cols-1 row-cols-md-2 g-4">
+			<div class="col">
+				<div class="card text-white bg-warning mb-3">
+					<div class="card-body">
+						<h5 class="card-title">Indices de défavorisation</h5>
+						<p class="card-text">{{ stats.get_total_IDEs }}</p>
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				<div class="card text-white bg-info mb-3">
+					<div class="card-body">
+						<h5 class="card-title">Écoles défavorisées</h5>
+						<p class="card-text">{{ stats.get_total_ecoles_defavorisees }}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row row-cols-1 row-cols-md-1 g-4">
+			<div class="col">
+				<div class="card text-white bg-secondary mb-3">
+					<div class="card-body">
+						<h5 class="card-title">Écoles par centre de services scolaires</h5>
+						<p class="card-text">
+							<ul>
+								{% for reg, count in stats.get_ecole_par_regroupement.items %}
+									<li>{{ reg }}: {{ count }}</li>
+								{% endfor %}
+							</ul>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}
 

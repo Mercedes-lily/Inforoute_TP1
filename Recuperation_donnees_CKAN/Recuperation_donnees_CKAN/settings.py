@@ -142,6 +142,9 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 GRAPHENE= {
 	'SCHEMA' : 'gql.schema.schema',
+	'MIDDLEWARE' : [
+        'graphql_jwt.middleware.JSONWebTokenMiddleware',
+    ],
 }
 
 REST_FRAMEWORK = {
