@@ -23,13 +23,9 @@ class QueryCoordonnee(graphene.ObjectType):
 										id=graphene.Int(required=True))
 	@login_required
 	def resolve_all_coordonnees(root, info):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		return Coordonnee.objects.all()
 	@login_required
 	def resolve_coordonnee_by_id(root, info, id):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		try:
 			return Coordonnee.objects.get(pk=id)
 		except Coordonnee.DoesNotExist:
@@ -46,13 +42,9 @@ class QueryIMSE(graphene.ObjectType):
 										id=graphene.Int(required=True))
 	@login_required
 	def resolve_all_imse(root, info):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		return IMSE.objects.all()
 	@login_required
 	def resolve_imse_by_id(root, info, id):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		try:
 			return IMSE.objects.get(pk=id)
 		except IMSE.DoesNotExist:
@@ -69,13 +61,9 @@ class QuerySFR(graphene.ObjectType):
 										id=graphene.Int(required=True))
 	@login_required
 	def resolve_all_sfr(root, info):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		return SFR.objects.all()
 	@login_required
 	def resolve_sfr_by_id(root, info, id):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		try:
 			return SFR.objects.get(pk=id)
 		except SFR.DoesNotExist:
@@ -92,13 +80,9 @@ class QueryIDE(graphene.ObjectType):
 										id=graphene.Int(required=True))
 	@login_required
 	def resolve_all_ide(root, info):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		return IDE.objects.all()
 	@login_required
 	def resolve_ide_by_id(root, info, id):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		try:
 			return IDE.objects.get(pk=id)
 		except IDE.DoesNotExist:
@@ -116,13 +100,9 @@ class QueryRegroupement(graphene.ObjectType):
 										id=graphene.Int(required=True))
 	@login_required
 	def resolve_all_regroupements(root, info):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		return Regroupement.objects.all()
 	@login_required
 	def resolve_regroupement_by_id(root, info, id):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		try:
 			return Regroupement.objects.get(pk=id)
 		except Regroupement.DoesNotExist:
@@ -141,13 +121,9 @@ class QueryEtablissement(graphene.ObjectType):
 										id=graphene.Int(required=True))
 	@login_required
 	def resolve_all_etablissements(root, info):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		return Etablissement.objects.all()
 	@login_required
 	def resolve_etablissements_by_id(root, info, id):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		try:
 			return Etablissement.objects.get(pk=id)
 		except Etablissement.DoesNotExist:
@@ -164,8 +140,6 @@ class CreateCoordonnee(graphene.Mutation):
 	coordonnee = graphene.Field(CoordonneeType)
 	@login_required
 	def mutate(root, info, adresse, municipalite, code_postal, site=None, telephone=None):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		coordonnee = Coordonnee(
 			adresse=adresse,
 			municipalite=municipalite,
@@ -183,8 +157,6 @@ class DeleteCoordonnee(graphene.Mutation):
 	success = graphene.Boolean()
 	@login_required
 	def mutate(root, info, id):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		try:
 			coordonnee = Coordonnee.objects.get(pk=id)
 			coordonnee.delete()
@@ -200,8 +172,6 @@ class CreateIDE(graphene.Mutation):
 	ide = graphene.Field(IDEType)
 	@login_required
 	def mutate(root, info, sfr, imse, defavorisation):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		#Rechercher les objets liés (sfr, imse)
 		try:
 			sfr_obj = SFR.objects.get(pk=sfr)
@@ -226,8 +196,6 @@ class DeleteIDE(graphene.Mutation):
 	success = graphene.Boolean()
 	@login_required
 	def mutate(root, info, id):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		try:
 			ide = IDE.objects.get(pk=id)
 			ide.delete()
@@ -243,8 +211,6 @@ class CreateIMSE(graphene.Mutation):
 	imse = graphene.Field(IMSEType)
 	@login_required
 	def mutate(root, info, indice, rang):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		imse = IMSE(
 			indice=indice,
 			rang=rang
@@ -259,8 +225,6 @@ class DeleteIMSE(graphene.Mutation):
 	success = graphene.Boolean()
 	@login_required
 	def mutate(root, info, id):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		try:
 			imse = IMSE.objects.get(pk=id)
 			imse.delete()
@@ -276,8 +240,6 @@ class CreateSFR(graphene.Mutation):
 	sfr = graphene.Field(SFRType)
 	@login_required
 	def mutate(root, info, indice, rang):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		sfr = SFR(
 			indice=indice,
 			rang=rang
@@ -292,8 +254,6 @@ class DeleteSFR(graphene.Mutation):
 	success = graphene.Boolean()
 	@login_required
 	def mutate(root, info, id):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		try:
 			sfr = SFR.objects.get(pk=id)
 			sfr.delete()
@@ -314,8 +274,6 @@ class CreateRegroupement(graphene.Mutation):
 	regroupement = graphene.Field(RegroupementType)
 	@login_required
 	def mutate(root, info, code, nom, nom_court, coordonnee, superficie, perimetre, langue):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		#Rechercher les objets liés (coordonnee)
 		try:
 			coordonnee_obj = Coordonnee.objects.get(pk=coordonnee)
@@ -341,8 +299,6 @@ class DeleteRegroupement(graphene.Mutation):
 	success = graphene.Boolean()
 	@login_required
 	def mutate(root, info, id):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		try:
 			regroupement = Regroupement.objects.get(pk=id)
 			regroupement.delete()
@@ -369,8 +325,6 @@ class CreateEtablissement(graphene.Mutation):
 	@login_required
 	def mutate(root, info, codeOrg, codeImm, nom, coordonnee, type, prescolaire, primaire, 
 			secondaire, professionnel, adulte, ide, regroupement):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		#Valider qu'un type est true
 		if not (prescolaire or primaire or secondaire or professionnel or adulte):
 			raise Exception("Veuillez sélectionner au moins un niveau d'éducation.")
@@ -410,8 +364,6 @@ class DeleteEtablissement(graphene.Mutation):
 	success = graphene.Boolean()
 	@login_required
 	def mutate(root, info, id):
-		# if not info.context.user.is_authenticated:
-		# 	raise GraphQLError("Authentification invalide. Veuillez vous connecter.")
 		try:
 			etablissement = Etablissement.objects.get(pk=id)
 			etablissement.delete()
