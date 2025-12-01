@@ -30,3 +30,4 @@ dist/
 .idea/          # PyCharm/IntelliJ
 *.swp           # Vim swap files
 *~              # Temporary files
+node_modules/   # Node.js modules
