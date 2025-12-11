@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { R } from "react-router/dist/development/index-react-server-client-CCjKYJTH";
 
 const Home: React.FC = () => {
   return (

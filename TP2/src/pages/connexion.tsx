@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Container, Row, Col, Form, Button, FormGroup } from "react-bootstrap"; //Check equivalent for shadcn-ui or tailwindcss
+import { Container, Row, Col, Form, Button } from "react-bootstrap"; //Check equivalent for shadcn-ui or tailwindcss
 import { useState } from "react";
 
 const Connexion: React.FC = () => {
