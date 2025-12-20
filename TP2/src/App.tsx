@@ -1,5 +1,4 @@
 import * as React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
 import Home  from "./pages/home";
 import Connexion from "./pages/connexion";
 import { BrowserRouter, Routes, Route } from "react-router";
