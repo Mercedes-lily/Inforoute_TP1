@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import type { Etablissement } from "../types/Etablissement";
 
-export const EtablissementGraphQlApi = createApi({
+export const EtablissementGraphQLApi = createApi({
   reducerPath: "EtablissementGraphQLApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://127.0.0.1:8000/gql/graphql/",
@@ -57,9 +57,45 @@ export const EtablissementGraphQlApi = createApi({
 							professionnel
 							adulte
 							type
-							coordonnee_id
-							ide_id
-							regroupement_id
+							coordonnee {
+                id
+                adresse
+                municipalite
+                code_postal
+                site
+                telephone
+              }
+							ide{
+                id
+                sfr{
+                  id
+                  indice
+                  rang
+                  }
+                imse{
+                  id
+                  indice
+                  rang
+                  }
+                defavorisation
+              }
+							regroupement{
+                id
+                code
+                nom
+                nom_court
+                coordonnee{
+                  id
+                  adresse
+                  municipalite
+                  code_postal
+                  site
+                  telephone
+                }
+                superficie
+                perimetre
+                langue
+              }
 							codeOrg
 						}
 					}
@@ -67,6 +103,17 @@ export const EtablissementGraphQlApi = createApi({
 			`,
           variables: {
             nom: newEtablissement.nom,
+            codeImm: newEtablissement.codeImm,
+            prescolaire: newEtablissement.prescolaire,
+            primaire: newEtablissement.primaire,
+            secondaire: newEtablissement.secondaire,
+            professionnel: newEtablissement.professionnel,
+            adulte: newEtablissement.adulte,
+            type: newEtablissement.type,
+            coordonnee_id: newEtablissement.coordonnee_id,
+            ide_id: newEtablissement.ide_id,
+            regroupement_id: newEtablissement.regroupement_id,
+            codeOrg: newEtablissement.codeOrg
           },
         }),
       }),
@@ -94,4 +141,4 @@ export const {
   useGetEtablissementQuery,
   useAddEtablissementMutation,
   useDeleteEtablissementMutation,
-} = EtablissementGraphQlApi;
+} = EtablissementGraphQLApi;

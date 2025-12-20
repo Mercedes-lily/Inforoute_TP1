@@ -16,6 +16,7 @@ class CoordonneeType(DjangoObjectType):
 		model = Coordonnee
 		fields = ("id", "adresse", "municipalite", "code_postal", 
 			"site", "telephone")
+	code_postal = graphene.String(name="code_postal")
 
 class QueryCoordonnee(graphene.ObjectType):
 	all_coordonnees = graphene.List(CoordonneeType)
@@ -93,6 +94,8 @@ class RegroupementType(DjangoObjectType):
 		model = Regroupement
 		fields = ("id", "code", "nom", "nom_court", "coordonnee", 
 			"superficie", "perimetre", "langue")
+		nom_court = graphene.String(name="nom_court")
+
 		
 class QueryRegroupement(graphene.ObjectType):
 	all_regroupements = graphene.List(RegroupementType)

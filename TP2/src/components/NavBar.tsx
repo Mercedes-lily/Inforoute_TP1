@@ -1,6 +1,5 @@
 import * as React from "react";
-import { Container, Nav, Navbar } from "react-bootstrap";
-
+import { cn } from "@/lib/utils"
 import { NavLink } from "react-router";
 
 const NavBar: React.FC = () => {
