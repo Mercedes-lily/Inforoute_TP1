@@ -17,15 +17,29 @@ export const loginUser = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await djangoApi.post("/api/token/", credentials);
+      const response = await djangoApi.post("http://127.0.0.1:8000/gql/graphql/", {
+        query: `
+          mutation TokenAuth($username: String!, $password: String!) {
+            tokenAuth(username: $username, password: $password) {
+              token
+              payload
+            }
+          }
+        `,
+        variables: {
+          username: credentials.username,
+          password: credentials.password,
+        },
+      });
+      if (response.data.errors) {
+        return rejectWithValue("Identifiants invalides");
+      }
+      const token = response.data.data.tokenAuth.token;
+      localStorage.setItem("token", token);
 
-      localStorage.setItem("token", response.data.token);
-
-      return response.data;
+      return { token }; // On retourne l'objet attendu par le fulfilled
     } catch (err: any) {
-      return rejectWithValue(
-        err.response?.data?.message || "Erreur de connexion"
-      );
+      return rejectWithValue("Erreur de connexion au serveur");
     }
   }
 );
@@ -35,7 +49,7 @@ export const getUserProfile = createAsyncThunk(
   async (token: string, { rejectWithValue }) => {
     try {
       const response = await djangoApi.get("/api/profile/", {
-        headers: { Authorization: `Token ${token}` },
+        headers: { Authorization: `JWT ${token}` },
       });
       return response.data;
     } catch (err: any) {
@@ -57,7 +71,7 @@ export const updateUserProfile = createAsyncThunk(
       const token = state.auth.token;
 
       const response = await djangoApi.put("/api/profile/update/", userData, {
-        headers: { Authorization: `Token ${token}` },
+        headers: { Authorization: `JWT ${token}` },
       });
       return response.data;
     } catch (err: any) {

@@ -7,8 +7,12 @@ export const CoordonneeGraphQLApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "http://127.0.0.1:8000/gql/graphql/",
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+    prepareHeaders: (headers, { getState }) => {
+      const token = (getState() as any).auth.token;
+      if (token) {
+        headers.set("Authorization", `JWT ${token}`);
+      }
+      return headers;
     },
   }),
   tagTypes: ["Coordonnee"],
@@ -23,12 +27,12 @@ export const CoordonneeGraphQLApi = createApi({
 							id
 							adresse
 							municipalite
-							code_postal
+							codePostal
 							site
 							telephone
 						}
 				`,
-		}),
+        }),
         invalidatesTags: ["Coordonnee"],
       }),
     }),
@@ -37,14 +41,14 @@ export const CoordonneeGraphQLApi = createApi({
         url: "",
         body: JSON.stringify({
           query: `
-					mutation CreateCoordonnee($adresse: String!, $municipalite: String!, $code_postal: String!, $site: String!, $telephone: String!) {
-					createCoordonnee(adresse: $adresse, municipalite: $municipalite, code_postal: $code_postal, site: $site, telephone: $telephone)
+					mutation CreateCoordonnee($adresse: String!, $municipalite: String!, $codePostal: String!, $site: String!, $telephone: String!) {
+					createCoordonnee(adresse: $adresse, municipalite: $municipalite, codePostal: $code_postal, site: $site, telephone: $telephone)
 					{
 						coordonnee {
 							id
 							adresse
 							municipalite
-							code_postal
+							codePostal
 							site
 							telephone
 						}
@@ -54,7 +58,7 @@ export const CoordonneeGraphQLApi = createApi({
           variables: {
             adresse: newCoordonnee.adresse,
             municipalite: newCoordonnee.municipalite,
-            code_postal: newCoordonnee.code_postal,
+            codePostal: newCoordonnee.code_postal,
             site: newCoordonnee.site,
             telephone: newCoordonnee.telephone,
           },

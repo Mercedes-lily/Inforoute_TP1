@@ -9,7 +9,7 @@ export const fetchEtablissements = createAsyncThunk(
 			const token = state.auth.token;
 
 			const response = await djangpApi.get("http://127.0.0.1:8000/api/ecole/", {
-				headers: { Authorization: `Token ${token}` },
+				headers: { Authorization: `JWT ${token}` },
 			});
 			return response.data;
 		} catch (err: any) {

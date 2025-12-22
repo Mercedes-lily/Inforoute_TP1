@@ -47,13 +47,13 @@ export const RegroupementGraphQLApi = createApi({
         url: "",
         body: JSON.stringify({
           query: `
-					mutation CreateRegroupement($code: Number!; $nom: String!, $nom_court: String!, $coordonnee_id: Number!, $superficie: Number!, $perimetre: Number!, langue: String!) {
-					createRegroupement(code: $code, nom: $nom, nom_court: $nom_court, coordonnee_id: $coordonnee_id, superficie: $superficie, perimetre: $perimetre, langue: $langue)
+					mutation CreateRegroupement($code: Number!; $nom: String!, $nomCourt: String!, $coordonnee_id: Number!, $superficie: Number!, $perimetre: Number!, langue: String!) {
+					createRegroupement(code: $code, nom: $nom, nomCourt: $nomCourt, coordonnee_id: $coordonnee_id, superficie: $superficie, perimetre: $perimetre, langue: $langue)
 					{
 						Regroupement {
 							code
 							nom
-							nom_court
+							nomCourt
 							coordonnee_id
 							superficie
 							perimetre
@@ -65,7 +65,7 @@ export const RegroupementGraphQLApi = createApi({
           variables: {
             nom: newRegroupement.nom,
 			code: newRegroupement.code,
-			nom_court: newRegroupement.nom_court,
+			nomCourt: newRegroupement.nom_court,
 			coordonnee_id: newRegroupement.coordonnee_id,
 			superficie: newRegroupement.superficie,
 			perimetre: newRegroupement.perimetre,

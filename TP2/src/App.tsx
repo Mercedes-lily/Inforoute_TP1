@@ -34,7 +34,7 @@ import Home from "./pages/home";
 import Connexion from "./pages/connexion";
 import Profil from "./pages/profil";
 import RestPage from "./pages/rest";
-// import GraphQLPage from "./pages/graphql";
+import GraphQLPage from "./pages/graphql";
 import { BrowserRouter, Routes, Route } from "react-router";
 import NavBar from "./components/NavBar";
 
@@ -57,7 +57,7 @@ const App: React.FC = () => {
         <Route path="/connexion" element={<Connexion />} />
         <Route path="/profil" element={<Profil />} />
         <Route path="/rest-api" element={<RestPage />} />
-        {/* <Route path="/graphql" element={<GraphQLPage />} /> */}
+        <Route path="/graphql" element={<GraphQLPage />} />
 
         <Route path="*" element={<Home />} />
       </Routes>

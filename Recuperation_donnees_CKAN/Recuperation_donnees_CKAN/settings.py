@@ -151,10 +151,24 @@ GRAPHENE= {
     ],
 }
 
+GRAPHENE_JWT = {
+    'JWT_AUTH_HEADER_PREFIX': 'JWT', # On force le préfixe JWT
+    'JWT_VERIFY_EXPIRATION': True,
+}
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
+		'api.authenticate.CustomJSONWebTokenBackend', #Authentification par token JWT pour DRF
         'rest_framework.authentication.TokenAuthentication',
     ]
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "authorization",
+    "content-type",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
