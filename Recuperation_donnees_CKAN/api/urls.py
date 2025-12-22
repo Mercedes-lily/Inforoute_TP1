@@ -1,7 +1,9 @@
 from django.urls import path
-from .views import EtablissementAPIView, EtablissementDeleteAPIView
+from .views import EtablissementAPIView, EtablissementDeleteAPIView, get_profile, update_profile
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+
+
 
 app_name = 'api'
 
@@ -19,4 +21,6 @@ urlpatterns = [
     path('ecole/', EtablissementAPIView.as_view(), name = 'ecole_api'),
     path('ecole/<int:etablissement_id>/', EtablissementDeleteAPIView.as_view(), name = 'ecole_api_delete'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+	path('profile/', get_profile, name='profile'),
+	path('profile/update/', update_profile, name='update_profile'),
 ]

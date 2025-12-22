@@ -4,7 +4,7 @@ from .serializers import EtablissementSerializer
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework.decorators import api_view, permission_classes
 
 class EtablissementAPIView(APIView):
     permission_classes = [ IsAuthenticated ]
@@ -62,3 +62,45 @@ class EtablissementDeleteAPIView(APIView):
 
         etablissement.delete()
         return Response({"message" : "Établissement supprimée"}, status = status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_profile(request):
+    user = request.user
+    return Response({
+        'id': user.id,
+        'username': user.username,
+        'email': user.email,
+        'role': 'Admin' if user.is_staff else 'UtilisateurRegulier'
+    })
+
+@api_view(['GET', 'PUT'])
+@permission_classes([IsAuthenticated])
+def update_profile(request):
+    user = request.user
+
+    if request.method == 'GET':
+        return Response({
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'role': 'Admin' if user.is_staff else 'UtilisateurRegulier'
+        })
+
+    elif request.method == 'PUT':
+        data = request.data
+        try:
+            user.username = data.get('username', user.username)
+            user.email = data.get('email', user.email)
+            password = data.get('password')
+            if password:
+                user.set_password(password)
+            user.save()
+            return Response({
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,
+                'role': 'Admin' if user.is_staff else 'UtilisateurRegulier'
+            }, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

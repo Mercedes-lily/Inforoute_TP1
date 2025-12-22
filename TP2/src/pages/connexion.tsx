@@ -1,5 +1,10 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { AppDispatch, RootState } from "@/app/store";
+import { getUserProfile, loginUser } from "@/features/authSlices";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,14 +15,33 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2 } from "lucide-react";
 
 const Connexion: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
+  const { loading, error, token } = useSelector(
+    (state: RootState) => state.auth
+  );
+
+  useEffect(() => {
+    if (token) {
+      navigate("/");
+    }
+  }, [token, navigate]);
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login with:", { username, password });
+    const resutlAction = await dispatch(loginUser({ username, password }));
+    if (loginUser.fulfilled.match(resutlAction)) {
+      const token = resutlAction.payload.token;
+      await dispatch(getUserProfile(token));
+      navigate("/");
+    };
   };
 
   return (
@@ -31,13 +55,17 @@ const Connexion: React.FC = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
             <div className="space-y-2">
               <Label htmlFor="username">Nom d'utilisateur</Label>
               <Input
                 id="username"
                 type="text"
-                placeholder="Ex: jean.tremblay"
+                placeholder="Nom d'utilisateur"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
@@ -56,16 +84,16 @@ const Connexion: React.FC = () => {
             </div>
 
             <Button type="submit" className="w-full">
-              Se connecter
+              {loading ? ( // Afficher l'icone de chargement lorsque la connection s'effectue
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Connexion en cours...
+                </>
+              ) : (
+                "Se connecter"
+              )}
             </Button>
           </form>
-
-          <div className="mt-6 text-center">
-            <h2 className="text-lg font-semibold">Bienvenue</h2>
-            <p className="text-sm text-muted-foreground">
-              Ceci est la page d'atterrissage principale de notre application.
-            </p>
-          </div>
         </CardContent>
       </Card>
     </div>
